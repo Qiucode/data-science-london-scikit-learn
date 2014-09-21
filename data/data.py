@@ -17,12 +17,13 @@ def write_result(y, comment):
     :return:
     """
     result = "result---" + ctime() + ".txt"
+    # os.mkdir(curpath + "/results/")
     f = open(curpath + "/results/" + result,
              "w")
     f.write("Id,Solution\n")  # add head information to result
 
     for i, x in enumerate(y):
-        f.write(str(i) + "," + str(int(x)) + "\n")
+        f.write(str(i+1) + "," + str(int(x)) + "\n")
     f.close()
 
     log = open(curpath + "/result_log.txt", "a")
