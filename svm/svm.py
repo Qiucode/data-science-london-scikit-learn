@@ -1,42 +1,41 @@
 """
 
 """
-from sklearn.svm import LinearSVC
-from sklearn import preprocessing
 from data.data import trainX, trainY, testX, write_result
-import numpy as np
 from sklearn import cross_validation
 # from sklearn import svm
 # import random
+from pprint import pprint
 
-from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.svm import SVC
-from sklearn.decomposition import PCA
-from sklearn.feature_selection import SelectKBest
+import numpy as np
+from sklearn.grid_search import GridSearchCV
+from sklearn.preprocessing import scale
+
 
 def naive_svm():
     """
     try a naive svm method!
     :return: numpy, test labels
     """
+    preprocess(trainX)
 
-    # TODO 特征预处理
-    # preprocess(trainX)
-
-    clf = LinearSVC()
+    # grid search
+    params = {'kernel': ['rbf'],
+              'C': [0.5, 1, 2, 3, 4, 5],
+              'gamma': np.arange(0.01, 0.02, 0.001)}
+    svc = SVC()
+    clf = GridSearchCV(svc, params, cv=5, n_jobs=-1)
     clf.fit(trainX, trainY)
-    y = clf.predict(testX)
+    pprint(clf.grid_scores_)
+    print(clf.best_params_, clf.best_score_)
+
+    # create result
+    best_clf = clf.best_estimator_
+    best_clf.fit(trainX, trainY)
+    y = best_clf.predict(testX)
     return y
 
-def preprocess(data):
-    """
-    data preprocessing
-    :param data:
-    :return:
-    """
-    data_normalized = preprocessing.normalize(data,norm = 'l2')
-
-    return data_normalized
 
 def evaluate(gt,pt):
     """
@@ -81,7 +80,7 @@ def multiple_feature_methods():
         pipline, trainX, trainY, cv = 5)
     print(scores)
 
-if __name__ == '__main__':
+
     # y = naive_svm()
     # [train_data,train_label,test_data,test_label] = split()
 
@@ -99,7 +98,20 @@ if __name__ == '__main__':
     # print(clf.score(X_test, Y_test))
     # TODO 处理程序
     # write_result(y, "naive svm, first edition")
-    multiple_feature_methods()
+    # multiple_feature_methods()
 
     # print(clf)
+
+def preprocess(x):
+    """
+    do some preprocessing on raw data
+    :param x: numpy array
+    :return:
+    """
+    # scale to standard distribution
+    scale(x)
+
+
+if __name__ == '__main__':
+    results = naive_svm()
 
