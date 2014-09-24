@@ -9,9 +9,10 @@ from sklearn import cross_validation
 # from sklearn import svm
 # import random
 
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.svm import SVC
 from sklearn.decomposition import PCA
+from sklearn.feature_selection import SelectKBest
 
 def naive_svm():
     """
@@ -65,6 +66,20 @@ def split():
     test_label = trainY[index_2]
     return train_data,train_label,test_data,test_label
 
+def multiple_feature_methods():
+    pca = PCA(n_components = 1)
+    selection  = SelectKBest(k = 1)
+    combined_features = FeatureUnion([("pca", pca), ("univ_select", selection)])
+    X_features = combined_features.fit(trainX, trainY).transform(trainX)
+
+    svc = SVC(kernel = "linear")
+    clf = SVC(kernel = "rbf")
+
+    pipline = Pipeline([("fearture", combined_features),("svm", clf)])
+
+    scores = cross_validation.cross_val_score(
+        pipline, trainX, trainY, cv = 5)
+    print(scores)
 
 if __name__ == '__main__':
     # y = naive_svm()
@@ -76,15 +91,15 @@ if __name__ == '__main__':
     # clf = svm.SVC(kernel = 'rbf', C = 1).fit(X_train, Y_train)
     # clf = svm.SVC(kernel = 'rbf')
 
-    estimators = [('reduce_dim', PCA()), ('SVM', SVC())]
-    clf = Pipeline(estimators)
-    scores = cross_validation.cross_val_score(
-        clf, trainX, trainY, cv = 5)
-    print(scores)
+    # estimators = [('reduce_dim', PCA()), ('SVM', SVC())]
+    # clf = Pipeline(estimators)
+    # scores = cross_validation.cross_val_score(
+    #     clf, trainX, trainY, cv = 5)
+    # print(scores)
     # print(clf.score(X_test, Y_test))
     # TODO 处理程序
     # write_result(y, "naive svm, first edition")
-
+    multiple_feature_methods()
 
     # print(clf)
 
