@@ -47,38 +47,38 @@ def evaluate(gt,pt):
     precision = abs(answer).sum
     return  precision
 
-def split():
-    """
-    use to divide taindata into two parts
-    :return: train_data,test_data
-    """
-    index = list(range(0,trainX.shape[0]))
-    print(index)
-    index_1 = random.sample(index,int((trainX.shape[0])/2))
-    index_2 = []
-    for i in index:
-        if i not in index_1:
-            index_2.append(i)
-    train_data = trainX[index_1,:]
-    train_label = trainY[index_1]
-    test_data = trainX[index_2,:]
-    test_label = trainY[index_2]
-    return train_data,train_label,test_data,test_label
+# def split():
+#     """
+#     use to divide taindata into two parts
+#     :return: train_data,test_data
+#     """
+#     index = list(range(0,trainX.shape[0]))
+#     print(index)
+#     index_1 = random.sample(index,int((trainX.shape[0])/2))
+#     index_2 = []
+#     for i in index:
+#         if i not in index_1:
+#             index_2.append(i)
+#     train_data = trainX[index_1,:]
+#     train_label = trainY[index_1]
+#     test_data = trainX[index_2,:]
+#     test_label = trainY[index_2]
+#     return train_data,train_label,test_data,test_label
 
-def multiple_feature_methods():
-    pca = PCA(n_components = 1)
-    selection  = SelectKBest(k = 1)
-    combined_features = FeatureUnion([("pca", pca), ("univ_select", selection)])
-    X_features = combined_features.fit(trainX, trainY).transform(trainX)
-
-    svc = SVC(kernel = "linear")
-    clf = SVC(kernel = "rbf")
-
-    pipline = Pipeline([("fearture", combined_features),("svm", clf)])
-
-    scores = cross_validation.cross_val_score(
-        pipline, trainX, trainY, cv = 5)
-    print(scores)
+# def multiple_feature_methods():
+#     pca = PCA(n_components = 1)
+#     selection  = SelectKBest(k = 1)
+#     combined_features = FeatureUnion([("pca", pca), ("univ_select", selection)])
+#     X_features = combined_features.fit(trainX, trainY).transform(trainX)
+#
+#     svc = SVC(kernel = "linear")
+#     clf = SVC(kernel = "rbf")
+#
+#     pipline = Pipeline([("fearture", combined_features),("svm", clf)])
+#
+#     scores = cross_validation.cross_val_score(
+#         pipline, trainX, trainY, cv = 5)
+#     print(scores)
 
 
     # y = naive_svm()
@@ -113,5 +113,6 @@ def preprocess(x):
 
 
 if __name__ == '__main__':
+    print("hello")
     results = naive_svm()
 
