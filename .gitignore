@@ -55,3 +55,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+＃过滤文件夹
+/data/results/
+
+#过滤文件
+/svm/test.py
